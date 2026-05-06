@@ -1,0 +1,85 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f1ea;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1f3d2b;
+    color: white;
+    padding: 15px 30px;
+}
+
+.header nav a {
+    margin: 0 10px;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-login {
+    background: white;
+    color: #1f3d2b;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+    background-color: #e9dfd2;
+}
+
+.hero-text h1 {
+    font-size: 36px;
+}
+
+.hero button {
+    background-color: #1f3d2b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+}
+
+.category {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+}
+.category button {
+    padding: 10px;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.products {
+    padding: 30px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.card button {
+    background-color: #1f3d2b;
+    color: white;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+}
+
