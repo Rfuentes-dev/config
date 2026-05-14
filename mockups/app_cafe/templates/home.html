@@ -1,3 +1,8 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,11 +11,6 @@
     <title>Document</title>
 </head>
 <body>
-    {% extends 'base.html' %}
-
-{% block title %}Inicio{% endblock %}
-
-{% block content %}
     <section class="hero">
         <div class="hero-text">
             <h1>Cafe deslumbrante, <br> para empresarios</h1>
@@ -29,7 +29,6 @@
             {% endfor %}
         </div>
     </section>
-{% endblock %}
 </body>
 </html>
-
+{% endblock %}
