@@ -1,16 +1,26 @@
-{% extends 'base.html' %}
-
-{% block title %}Inicio{% endblock %}
-
-{% block content %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Home</title>
 </head>
 <body>
+    <header class="header">
+        <div class="logo">CafeLazor</div>
+        <nav>
+            <a href="home.html">Inicio</a>
+            <a href="menu.html">Menu</a>
+            <a href="#">About us</a>
+            <a href="#">Contact</a>
+        </nav>
+            <span>hola Username</span>
+            <a href="login.html">
+                Logout
+            </a>
+            <a href="login.html">Login</a>
+    </header>
     <section class="hero">
         <div class="hero-text">
             <h1>Cafe deslumbrante, <br> para empresarios</h1>
@@ -20,15 +30,12 @@
     <section class="products">
         <h2>Productos Recientes</h2>
         <div class="grid">
-            {% for product in products %}
             <div class="card">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                <h3>{{ product.name }}</h3>
-                <p>${{ product.price|floatformat:2 }}</p>
+                <img src="#" alt="Espresso">
+                <h3>Espresso</h3>
+                <p>$2.500</p>
             </div>
-            {% endfor %}
         </div>
     </section>
 </body>
 </html>
-{% endblock %}
