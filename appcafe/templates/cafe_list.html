@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Cafes</title>
+</head>
+<body>
+    <h1>Listado de Cafes</h1>
+
+    <a href="{% url 'add_cafe' %}">Agregar Cafe</a>
+
+    <hr>
+
+    {% for cafe in cafes %}
+        <div>
+            <h2>{{ cafe.name }}</h2>
+            <p>{{ cafe.description }}</p>
+            <p>Precio: ${{ cafe.price }}</p>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No hay cafes disponibles.</p>
+    {% endfor %}
+</body>
+</html>
