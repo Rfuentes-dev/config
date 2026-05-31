@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Menu</title>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">CAFELAZOR</div>
+        <nav>
+            <a href="{% url 'index' %}">Inicio</a>
+            <a href="{% url 'menu' %}">Menu</a>
+            <a href="{% url 'about' %}">About us</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'cart' %}">Carrito</a>
+        </nav>
+        <a class="btn-login" href="{% url 'login' %}">Login</a>
+    </header>
+    <h2>Menu Completo</h2>
+
+    <div class="grid">
+            <div class="card">
+                <img src="#">
+                <h3>Cappucino</h3>
+                <p>$5400</p>
+                <button>Add</button>
+            </div>
+            <div class="card">
+                <img src="#">
+                <h3>Iced Latte</h3>
+                <p>$3.900</p>
+                <button>Add</button>
+            </div>
+    </div>
+</body>
+</html>
+
