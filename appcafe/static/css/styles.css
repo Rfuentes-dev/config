@@ -117,11 +117,12 @@ table {
     width: 50%;
     background-color: #1f3d2b;
     color:white;
+    position: center;
 }
 
 td, th {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 20px;
   margin: 50px auto;
 }
 

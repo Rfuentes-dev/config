@@ -23,42 +23,44 @@
         <div class="hero-text">
             <h1>Cafe deslumbrante, <br> para empresarios</h1>
             <p>sean bienvenidos</p>
-            <button>Menu</button>
+            <button><a href="{% url 'menu' %}">Menu</a></button>
         </div>
         <img src="#" alt="cafe">
     </section>
     <section class="category">
-        <button>Cafes Calientes</button>
-        <button>Cafes Frios</button>
-        <button>Postres</button>
-        <button>Sandwiches</button>
-        <button>Promociones</button>
+        <button><a href="{% url 'menu' %}?type=hot">Cafes Calientes</a></button>
+        <button><a href="{% url 'menu' %}?type=cold">Cafes Frios</a></button>
+        <button><a href="{% url 'menu' %}?type=desserts">Postres</a></button>
+        <button><a href="{% url 'menu' %}?type=sandwiches">Sandwiches</a></button>
+        <button><a href="{% url 'menu' %}?type=promotions">Promociones</a></button>
     </section>
     <section>
         <section class="products">
             <h2>Recent Products</h2>
             <div class="grid">
-                <div class="card">
+                <div class="card" data-id="1" data-name="Cafe" data-price="3100">
                     <img src="#">
                     <h3>Cafe</h3>
                     <p>$3.100</p>
-                    <button>Add</button>
+                    <button class="btn-primary" onclick="addToCart(1, 'Cafe', 3100)">Add</button>
                 </div>
-                <div class="card">
+                <div class="card" data-id="2" data-name="Capuccino" data-price="5500">
                     <img src="#">
                     <h3>Capuccino</h3>
                     <p>$5.500</p>
-                    <button>Add</button>
+                    <button class="btn-primary" onclick="addToCart(2, 'Capuccino', 5500)">Add</button>
                 </div>
-                <div class="card">
+                <div class="card" data-id="3" data-name="Iced Latte" data-price="3900">
                     <img src="#">
                     <h3>Iced Latte</h3>
                     <p>$3.900</p>
-                    <button>Add</button>
+                    <button class="btn-primary" onclick="addToCart(3, 'Iced Latte', 3900)">Add</button>
                 </div>
             </div>
         </section>
     </section>
+{% csrf_token %}
+<script src="{% static 'js/script.js' %}"></script>
 </body>
 
 </html>

@@ -17,7 +17,7 @@
             <a href="{% url 'cart' %}">Carrito</a>
         </nav>
             <span>hola {{ user.username }}</span>
-            <a href="{% url 'logout' %}">
+            <a href="{% url 'index' %}">
                 Logout
             </a>
             <a class="btn-login" href="{% url 'login' %}">Login</a>
@@ -35,9 +35,14 @@
                 <img src="#" alt="Espresso">
                 <h3>Espresso</h3>
                 <p>$2.500</p>
-                <button>Add</button>
+                <button class="btn btn-primary" onclick="addToCart(1, 'Espresso', 2500)">Add</button>
             </div>
         </div>
     </section>
+    <div id="csrf-token">
+        {% csrf_token %}
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Confirmado</title>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">CAFELAZOR</div>
+        <nav>
+            <a href="{% url 'index' %}">Inicio</a>
+            <a href="{% url 'menu' %}">Menu</a>
+            <a href="{% url 'about' %}">About us</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'cart' %}">Carrito</a>
+        </nav>
+        <a class="btn-login" href="{% url 'login' %}">Login</a>
+    </header>
+    <h1>Gracias por su compra.</h1>
+    <h1>El envio se enviara en breve</h1>
+</body>
+</html>
