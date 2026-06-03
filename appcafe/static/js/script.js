@@ -1,78 +1,76 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.btn-primary');
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            const button = event.target;
-            const id = button.getAttribute('data-id');
-            const name = button.getAttribute('data-name');
-            const price = button.getAttribute('data-price');
-            const action = button.getAttribute('data-action');
-            if (action === 'add') {
-                addToCart(id, name, price, action, button);
-            } else if (action === 'remove') {
-                removeFromCart(id);
-            }
-        });
-    });
+    if (event.target && event.target.classList.contains('btn-primary')) {
+        const id = event.target.getAttribute('data-id');
+        const name = event.target.getAttribute('data-name');
+        const price = event.target.getAttribute('data-price');
+        addToCart(id, name, price);
+    } else if (event.target && event.target.classList.contains('btn-remove')) {
+        const id = event.target.getAttribute('data-id');
+        const name = event.target.getAttribute('data-name');
+        const price = event.target.getAttribute('data-price');
+        removeFromCart(id, name, price);
+    }
 });
 
-function updateCartCount(count) {
-    const cartCountElement = document.getElementById('cart-count');
-    if (cartCountElement) {
-        cartCountElement.textContent = count;
-    }
-}
+function removeFromCart(id, name, price) {
+    const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
 
-function updateTotal() {
-    const totalElement = document.getElementById('total');
-    let total = 0;
-    const cartItems = document.querySelectorAll('#cart-item-{{ item.id }}');
-    cartItems.forEach(item => {
-        const price = parseFloat(item.querySelector('td:nth-child(3)').textContent);
-        total += price;
-    });
-    totalElement.textContent = total.toFixed(2);
-}
-
-function removeFromCart(id) {
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    if (!csrftoken) {
+    if (!csrfTokenElement) {
         console.error('CSRF token not found!');
         return;
-    }  
+    }
+    const csrfToken = csrfTokenElement.value;
     fetch('/remove_from_cart/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken
+            'X-CSRFToken': csrfToken
         },
-        body: JSON.stringify({ product_id: id })
+        body: JSON.stringify({product_id: id})
     })
-    .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                console.log('Item removed from cart successfully');
-                window.location.replace(window.location.origin + '/cart/');
-            } else {
-                alert(data.error || 'Error removing from cart');
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success' || data.message) {
+            console.log('Item removed from cart successfully');
+            const row = document.querySelector(`.cart-item[data-id="${id}"]`);
+            if (row) {
+                row.remove();
+
+                if (data.cart_count !== undefined) {
+                    document.getElementById('cart-count').textContent = data.cart_count;
+                }
             }
-        })
-    
+
+            const tbody = document.querySelector('#cart-table tbody');
+            if (tbody && tbody.children.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">Your cart is empty.</td></tr>';
+        } else {
+            alert(data.error || 'Error removing from cart');
+        }
+    }})
     .catch(error => {
         console.error('Error:', error);
         alert('An error occurred while removing from cart');
     });
 }
 
+function removeCartItemFromUI(id) {
+    
+}
+
 function addToCart(id, name, price) {
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const csrfTokenElement = document.getElementById('csrf-token');
 
-    if (!csrftoken) {
+    if (!csrfTokenElement) {
         console.error('CSRF token not found!');
         return;
     }
-    const csrfToken = csrfTokenInput.value;
+    const csrfToken = csrfTokenElement.value;
     const productData = {
         product_id: id,
         product_name: name,
@@ -82,23 +80,27 @@ function addToCart(id, name, price) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken
+            'X-CSRFToken': csrfToken
         },
         body: JSON.stringify(productData)
     })
-    .then(response => response.json()
-        .then(data => {
-            if (response.ok) {
-                alert(data.message);
-            } else {
-                alert(data.error || 'Error adding to cart');
-            }
-        })
-    )
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .catch(error => {
         console.error('Error:', error);
         alert('An error occurred while adding to cart');
     });
+}
+
+function updateCartCount(count) {
+    const cartCountElement = document.getElementById('cart-count');
+    if (cartCountElement) {
+        cartCountElement.textContent = count;
+    }
 }
 
 function getCookie(name) {
