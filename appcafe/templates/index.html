@@ -1,5 +1,3 @@
-
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -19,7 +17,17 @@
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'cart' %}">Carrito</a>
         </nav>
-        <a class="btn-login" href="{% url 'login' %}">Login</a>
+        <div>
+            {% if user.is_authenticated %}
+                <span>Hola {{ user.username }}</span>
+                {% if user.username == "Rodrigo" %}
+                    <a class="btn-login" href="/admin/">Admin</a>
+                {% endif %}
+                <a class="btn-login" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a class="btn-login" href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
     </header>
     <section class="hero">
         <div class="hero-text">
@@ -30,34 +38,27 @@
         <img src="#" alt="cafe">
     </section>
     <section class="category">
-        <button><a href="{% url 'menu' %}?type=hot">Cafes Calientes</a></button>
-        <button><a href="{% url 'menu' %}?type=cold">Cafes Frios</a></button>
-        <button><a href="{% url 'menu' %}?type=desserts">Postres</a></button>
-        <button><a href="{% url 'menu' %}?type=sandwiches">Sandwiches</a></button>
-        <button><a href="{% url 'menu' %}?type=promotions">Promociones</a></button>
+        <a href="{% url 'index' %}?type=hot"><button>Cafes Calientes</button></a>
+        <a href="{% url 'index' %}?type=cold"><button>Cafes Frios</button></a>
+        <a href="{% url 'index' %}?type=desserts"><button>Postres</button></a>
+        <a href="{% url 'index' %}?type=sandwiches"><button>Sandwiches</button></a>
+        <a href="{% url 'index' %}?type=promotions"><button>Promociones</button></a>
+        <a href="{% url 'index' %}"><button>All Products</button></a>
     </section>
     <section>
         <section class="products">
             <h2>Recent Products</h2>
             <div class="grid">
-                <div class="card" data-id="1" data-name="Cafe" data-price="3100">
-                    <img src="#">
-                    <h3>Cafe</h3>
-                    <p>$3.100</p>
-                    <button class="btn-primary" onclick="addToCart(1, 'Cafe', 3100)">Add</button>
-                </div>
-                <div class="card" data-id="2" data-name="Capuccino" data-price="5500">
-                    <img src="#">
-                    <h3>Capuccino</h3>
-                    <p>$5.500</p>
-                    <button class="btn-primary" onclick="addToCart(2, 'Capuccino', 5500)">Add</button>
-                </div>
-                <div class="card" data-id="3" data-name="Iced Latte" data-price="3900">
-                    <img src="#">
-                    <h3>Iced Latte</h3>
-                    <p>$3.900</p>
-                    <button class="btn-primary" onclick="addToCart(3, 'Iced Latte', 3900)">Add</button>
-                </div>
+                {% for cafe in cafes %}
+                    <div class="card">
+                        <img src="#">
+                        <h3>{{ cafe.name }}</h3>
+                        <p>${{ cafe.price }}</p>
+                        <button class="btn-primary" data-id="{{ cafe.id }}" data-name="{{ cafe.name }}" data-price="{{ cafe.price }}">Add</button>
+                    </div>
+                {% empty %}
+                    <p>No products available</p>
+                {% endfor %}
             </div>
         </section>
     </section>

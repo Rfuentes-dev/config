@@ -17,11 +17,16 @@
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'cart' %}">Carrito</a>
         </nav>
-            <span>hola Username</span>
-            <a class="btn-login" href="{% url 'index' %}">
-                Logout
-            </a>
-            <a class="btn-login" href="{% url 'login' %}">Login</a>
+        <div>
+            {% if user.is_authenticated and user.is_superuser %}
+                <span>Hola {{ user.username }}</span>
+                    <a class="btn-login" href="/admin/">Admin</a>
+                {% endif %}
+                <a class="btn-login" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a class="btn-login" href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
     </header>
 
     <h1>Tu Carrito</h1>
@@ -56,8 +61,8 @@
         </tbody>
     </table>
     <h3>Total: $<span id="total">{{ total }}</span></h3>
-    <form action="{% url 'resultado' %}">
-        <button>Confirm</button>
+    <form id="confirmForm" action="{% url 'resultado' %}" onsubmit="validateCart(event)">
+        <button type="submit">Confirm</button>
     </form>
 
     <script src="{% static 'js/script.js' %}"></script>

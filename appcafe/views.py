@@ -1,17 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Cafe
 from .forms import ProductForm
 from django.views.decorators.csrf import csrf_protect
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import logout, authenticate, login
 
 # Create your views here.
 def index(request):
-    return render(request, 'index.html')
+    category_type = request.GET.get('type', None)
+    
+    if category_type:
+        cafes = Cafe.objects.filter(category=category_type)
+    else:
+        cafes = Cafe.objects.all()
+    
+    return render(request, 'index.html', {'cafes': cafes, 'category_type': category_type})
 
 def home(request):
-    return render(request, 'home.html')
+    category_type = request.GET.get('type', None)
+    
+    if category_type:
+        cafes = Cafe.objects.filter(category=category_type)
+    else:
+        cafes = Cafe.objects.all()
+    
+    return render(request, 'home.html', {'cafes': cafes, 'category_type': category_type})
 
 def add_cafe(request):
     if request.method == 'POST':
@@ -28,8 +43,14 @@ def cafe_list(request):
     return render(request, 'cafe_list.html', {'cafes': cafes})
 
 def menu(request):
-    cafes = Cafe.objects.all()
-    return render(request, 'menu.html', {'cafes': cafes})
+    category_type = request.GET.get('type', None)
+    
+    if category_type:
+        cafes = Cafe.objects.filter(category=category_type)
+    else:
+        cafes = Cafe.objects.all()
+    
+    return render(request, 'menu.html', {'cafes': cafes, 'category_type': category_type})
 
 def cart(request):
     cart_items = request.session.get('cart', [])
@@ -47,6 +68,7 @@ def cart(request):
         cafe = Cafe.objects.filter(id=product_id).first()
         if cafe:
             cart_items.append({
+                'id': product_id,
                 'name': cafe.name,
                 'price': cafe.price,
                 'quantity': quantity,
@@ -60,10 +82,21 @@ def cart(request):
 
 @csrf_protect
 def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return render(request, 'login.html', {'error': 'Invalid username or password'})
     return render(request, 'login.html')
 
 def logout_view(request):
-    return render(request, 'logout.html')
+    logout(request)
+    return redirect('index')
 
 def about(request):
     return render(request, 'about.html')
@@ -78,42 +111,43 @@ def resultado(request):
 def add_to_cart(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        product_id = data.get('product_id')
-        quantity = data.get('quantity', 1)
+        product_id = int(data.get('product_id'))
+        quantity = int(data.get('quantity', 1))
 
         # Simulate adding to cart - replace with actual cart logic
         cart_session = request.session.get('cart', [])
         cart_session.append({'product_id': product_id, 'quantity': quantity})
         request.session['cart'] = cart_session
+        request.session.modified = True
 
         return JsonResponse({'message': 'Product added to cart'})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+@csrf_exempt
 def remove_from_cart(request):
     if request.method == 'POST':
-        return JsonResponse({'error': 'Invalid request'}, status=400)
         try:
             data = json.loads(request.body)
             product_id = data.get('product_id')
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+            
+            if product_id is None:
+                return JsonResponse({'error': 'product_id is required'}, status=400)
+            
+            product_id = int(product_id)
+            
+            cart_session = request.session.get('cart', [])
+            cart_session = [item for item in cart_session if int(item.get('product_id')) != product_id]
+            request.session['cart'] = cart_session
+            request.session.modified = True
 
-        cart_session = request.session.get('cart', [])
-        if product_id in cart:
-            cart.pop(product_id)
-
-        cart_session = [item for item in cart_session if item.get('product_id') != product_id]
-        request.session['cart'] = cart_session
-        request.session.modified = True
-
-        total_price = 0
-        for item in cart.values():
-            cafe = Cafe.objects.filter(id=item.get('product_id')).first()
-            if cafe:
-                total_price += cafe.price * item.get('quantity', 1)
-
-        return JsonResponse({'message': 'Product removed from cart'})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+            return JsonResponse({'status': 'success', 'message': 'Product removed from cart'})
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': f'Invalid JSON: {str(e)}'}, status=400)
+        except (ValueError, TypeError) as e:
+            return JsonResponse({'error': f'Invalid product_id: {str(e)}'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'Server error: {str(e)}'}, status=500)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 def category(request, category_name):
     cafes = Cafe.objects.filter(category=category_name)

@@ -17,24 +17,42 @@
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'cart' %}">Carrito</a>
         </nav>
-        <a class="btn-login" href="{% url 'login' %}">Login</a>
+        <div>
+            {% if user.is_authenticated %}
+                <span>Hola {{ user.username }}</span>
+                {% if user.username == "Rodrigo" %}
+                    <a class="btn-login" href="/admin/">Admin</a>
+                {% endif %}
+                <a class="btn-login" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a class="btn-login" href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
     </header>
     <h2>Menu Completo</h2>
 
+    <section class="category">
+        <a href="{% url 'menu' %}?type=hot"><button>Cafes Calientes</button></a>
+        <a href="{% url 'menu' %}?type=cold"><button>Cafes Frios</button></a>
+        <a href="{% url 'menu' %}?type=desserts"><button>Postres</button></a>
+        <a href="{% url 'menu' %}?type=sandwiches"><button>Sandwiches</button></a>
+        <a href="{% url 'menu' %}?type=promotions"><button>Promociones</button></a>
+        <a href="{% url 'menu' %}"><button>All Products</button></a>
+    </section>
+
     <div class="grid">
+        {% for cafe in cafes %}
             <div class="card">
                 <img src="#">
-                <h3>Cappucino</h3>
-                <p>$5400</p>
-                <button>Add</button>
+                <h3>{{ cafe.name }}</h3>
+                <p>${{ cafe.price }}</p>
+                <button class="btn-primary" data-id="{{ cafe.id }}" data-name="{{ cafe.name }}" data-price="{{ cafe.price }}">Add</button>
             </div>
-            <div class="card">
-                <img src="#">
-                <h3>Iced Latte</h3>
-                <p>$3.900</p>
-                <button>Add</button>
-            </div>
+        {% endfor %}
     </div>
+
+    {% csrf_token %}
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>
 

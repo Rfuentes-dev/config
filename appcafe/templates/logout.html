@@ -1,11 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title>Confirmado</title>
+    <title>Logout</title>
 </head>
 <body>
     <header class="header">
@@ -17,19 +17,15 @@
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'cart' %}">Carrito</a>
         </nav>
-        <div>
-            {% if user.is_authenticated %}
-                <span>Hola {{ user.username }}</span>
-                {% if user.username == "Rodrigo" %}
-                    <a class="btn-login" href="/admin/">Admin</a>
-                {% endif %}
-                <a class="btn-login" href="{% url 'logout' %}">Logout</a>
-            {% else %}
-                <a class="btn-login" href="{% url 'login' %}">Login</a>
-            {% endif %}
-        </div>
+        <a class="btn-login" href="{% url 'login' %}">Login</a>
     </header>
-    <h1>Gracias por su compra.</h1>
-    <h1>El envio se enviara en breve</h1>
+
+    <section class="login-container">
+        <h2>Logout Successful</h2>
+        <p>You have been successfully logged out!</p>
+        <p><a href="{% url 'index' %}">Return to Home</a></p>
+    </section>
+
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

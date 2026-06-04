@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('click', function(event) {
     if (event.target && event.target.classList.contains('btn-primary')) {
         const id = event.target.getAttribute('data-id');
         const name = event.target.getAttribute('data-name');
@@ -13,18 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function removeFromCart(id, name, price) {
-    const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
-
-    if (!csrfTokenElement) {
-        console.error('CSRF token not found!');
-        return;
-    }
-    const csrfToken = csrfTokenElement.value;
     fetch('/remove_from_cart/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
         },
         body: JSON.stringify({product_id: id})
     })
@@ -37,7 +29,7 @@ function removeFromCart(id, name, price) {
     .then(data => {
         if (data.status === 'success' || data.message) {
             console.log('Item removed from cart successfully');
-            const row = document.querySelector(`.cart-item[data-id="${id}"]`);
+            const row = document.querySelector(`#cart-item-${id}`);
             if (row) {
                 row.remove();
 
@@ -46,13 +38,14 @@ function removeFromCart(id, name, price) {
                 }
             }
 
-            const tbody = document.querySelector('#cart-table tbody');
+            const tbody = document.querySelector('table tbody');
             if (tbody && tbody.children.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">Your cart is empty.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4">Tu carrito está vacío.</td></tr>';
+            }
         } else {
             alert(data.error || 'Error removing from cart');
         }
-    }})
+    })
     .catch(error => {
         console.error('Error:', error);
         alert('An error occurred while removing from cart');
@@ -60,39 +53,44 @@ function removeFromCart(id, name, price) {
 }
 
 function removeCartItemFromUI(id) {
-    
+    const row = document.querySelector(`.cart-item[data-id="${id}"]`);
+    if (row) {
+        row.remove();
+    }
+
+    const tbody = document.querySelector('#cart-table tbody');
+    if (tbody && tbody.children.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4">Your cart is empty.</td></tr>';
+    }
 }
 
 function addToCart(id, name, price) {
-    const csrfTokenElement = document.getElementById('csrf-token');
-
-    if (!csrfTokenElement) {
-        console.error('CSRF token not found!');
-        return;
-    }
-    const csrfToken = csrfTokenElement.value;
-    const productData = {
-        product_id: id,
-        product_name: name,
-        product_price: price
-    };
     fetch('/add_to_cart/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
         },
-        body: JSON.stringify(productData)
+        body: JSON.stringify({
+            product_id: id,
+            product_name: name,
+            product_price: price
+        })
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            return response.json().then(data => {
+                throw new Error(data.error || 'Network response was not ok');
+            });
         }
         return response.json();
     })
+    .then(data => {
+        console.log('Product added successfully:', data);
+        alert('Product added to cart!');
+    })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while adding to cart');
+        alert('Error: ' + error.message);
     });
 }
 
@@ -116,4 +114,16 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function validateCart(event) {
+    const tbody = document.querySelector('table tbody');
+    const isEmpty = tbody.querySelector('tr td[colspan="4"]') !== null;
+            
+    if (isEmpty) {
+        event.preventDefault();
+        alert('Your cart is empty. Please add items before confirming your order.');
+        return false;
+    }
+    return true;
 }
