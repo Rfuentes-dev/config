@@ -20,7 +20,7 @@
         <div>
             {% if user.is_authenticated %}
                 <span>Hola {{ user.username }}</span>
-                {% if user.username == "Rodrigo" %}
+                {% if user.is_superuser %}
                     <a class="btn-login" href="/admin/">Admin</a>
                 {% endif %}
                 <a class="btn-login" href="{% url 'logout' %}">Logout</a>
