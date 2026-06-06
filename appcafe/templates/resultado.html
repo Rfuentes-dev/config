@@ -21,7 +21,7 @@
             {% if user.is_authenticated %}
                 <span>Hola {{ user.username }}</span>
                 {% if user.is_superuser %}
-                    <a class="btn-login" href="/admin/">Admin</a>
+                    <a class="btn-login" href="{% url 'cafe_list' %}">Admin</a>
                 {% endif %}
                 <a class="btn-login" href="{% url 'logout' %}">Logout</a>
             {% else %}

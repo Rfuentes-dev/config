@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Cafe</title>
+    <title>Editar Cafe</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,6 +41,7 @@
         }
         form {
             max-width: 500px;
+            margin: 20px 0;
         }
         input, textarea, select {
             width: 100%;
@@ -50,47 +51,50 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-        button[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
+        button, a {
             padding: 10px 15px;
+            margin: 10px 5px 10px 0;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        button[type="submit"] {
+            background-color: #2196F3;
+            color: white;
         }
         button[type="submit"]:hover {
-            background-color: #45a049;
+            background-color: #0b7dda;
         }
-        a {
+        .btn-back {
+            background-color: #6c757d;
             color: white;
-            text-decoration: none;
         }
-        a:hover {
-            text-decoration: underline;
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+        h1 {
+            color: #333;
         }
     </style>
 </head>
 <body>
     <header class="admin-header">
-        <div class="logo">Administracion CAFELAZOR</div>
+        <div class="logo">Administracion - CAFELAZOR</div>
         <div class="header-links">
             <a href="{% url 'cafe_list' %}" class="btn-login">Volver</a>
         </div>
     </header>
     
     <div class="content">
-        <h1>Agregar Producto</h1>
-        
-        {% if success %}
-            <div style="color: green; margin: 10px 0;">
-                <p>¡Producto agregado exitosamente!</p>
-            </div>
-        {% endif %}
+        <h1>Editar Producto: {{ cafe.name }}</h1>
         
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Agregar</button>
+            <button type="submit">Guardar Cambios</button>
+            <a href="{% url 'cafe_list' %}" class="btn-back">Cancelar</a>
         </form>
     </div>
 </body>

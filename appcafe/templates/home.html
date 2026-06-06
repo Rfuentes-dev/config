@@ -20,7 +20,7 @@
             {% if user.is_authenticated %}
                 <span>Hola {{ user.username }}</span>
                 {% if user.is_superuser %}
-                    <a class="btn-login" href="/admin/">Admin</a>
+                    <a class="btn-login" href="{% url 'cafe_list' %}">Admin</a>
                 {% endif %}
                 <a class="btn-login" href="{% url 'logout' %}">Logout</a>
             {% else %}
@@ -47,13 +47,13 @@
         <div class="grid">
             {% for cafe in cafes %}
                 <div class="card">
-                    <img src="#" alt="{{ cafe.name }}">
+                    <img src="{% static 'img/Cafe.png' %}" style="max-width: 75px; height: auto;" alt="{{ cafe.name }}">
                     <h3>{{ cafe.name }}</h3>
                     <p>${{ cafe.price }}</p>
                     <button class="btn-primary" data-id="{{ cafe.id }}" data-name="{{ cafe.name }}" data-price="{{ cafe.price }}">Add</button>
                 </div>
             {% empty %}
-                <p>No products available in this category</p>
+                <p>No Hay Productos Disponibles</p>
             {% endfor %}
         </div>
     </section>

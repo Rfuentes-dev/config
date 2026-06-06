@@ -4,23 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Cafes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .admin-header {
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+        .btn-add {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-add:hover {
+            background-color: #45a049;
+        }
+        .btn-back {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-back:hover {
+            background-color: #0b7dda;
+        }
+        .content {
+            margin: 20px;
+        }
+        .btn-edit {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+        }
+        .cafe-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: white;
+        }
+        .cafe-item h2 {
+            margin: 0 0 10px 0;
+        }
+        .cafe-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .category-badge {
+            display: inline-block;
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Listado de Cafes</h1>
-
-    <a href="{% url 'add_cafe' %}">Agregar Cafe</a>
-
-    <hr>
-
-    {% for cafe in cafes %}
-        <div>
-            <h2>{{ cafe.name }}</h2>
-            <p>{{ cafe.description }}</p>
-            <p>Precio: ${{ cafe.price }}</p>
+    <header class="admin-header">
+        <div class="logo">Administración - CAFELAZOR</div>
+        <div class="header-actions">
+            <a href="{% url 'add_cafe' %}" class="btn btn-add">+ Agregar Producto</a>
+            <a href="{% url 'index' %}" class="btn btn-back">Ir al sitio</a>
         </div>
-        <hr>
-    {% empty %}
-        <p>No hay cafes disponibles.</p>
-    {% endfor %}
+    </header>
+
+    <div class="content">
+        <h1>Gestión de Productos</h1>
+        {% if cafes %}
+            {% for cafe in cafes %}
+                <div class="cafe-item">
+                    <h2>{{ cafe.name }}</h2>
+                    <span class="category-badge">{{ cafe.get_category_display }}</span>
+                    <p><strong>Descripción:</strong> {{ cafe.description }}</p>
+                    <p><strong>Precio:</strong> ${{ cafe.price }}</p>
+                    
+                    <div class="cafe-actions">
+                        <a href="{% url 'edit_cafe' cafe.id %}" class="btn btn-edit">Editar</a>
+                        <a href="{% url 'delete_cafe' cafe.id %}" class="btn btn-delete">Eliminar</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay productos disponibles. <a href="{% url 'add_cafe' %}">Agregar uno ahora</a></p>
+        {% endif %}
+    </div>
 </body>
 </html>

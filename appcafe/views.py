@@ -42,6 +42,24 @@ def cafe_list(request):
     cafes = Cafe.objects.all()
     return render(request, 'cafe_list.html', {'cafes': cafes})
 
+def edit_cafe(request, cafe_id):
+    cafe = Cafe.objects.get(id=cafe_id)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=cafe)
+        if form.is_valid():
+            form.save()
+            return redirect('cafe_list')
+    else:
+        form = ProductForm(instance=cafe)
+    return render(request, 'edit_cafe.html', {'form': form, 'cafe': cafe})
+
+def delete_cafe(request, cafe_id):
+    cafe = Cafe.objects.get(id=cafe_id)
+    if request.method == 'POST':
+        cafe.delete()
+        return redirect('cafe_list')
+    return render(request, 'delete_cafe.html', {'cafe': cafe})
+
 def menu(request):
     category_type = request.GET.get('type', None)
     

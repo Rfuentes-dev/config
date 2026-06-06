@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Cafe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .admin-header {
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .btn-login {
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            background-color: #2196F3;
+            border-radius: 4px;
+        }
+        .btn-login:hover {
+            background-color: #0b7dda;
+        }
+        .content {
+            margin: 20px;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .cafe-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+        }
+        .cafe-info h2 {
+            margin-top: 0;
+        }
+        .actions {
+            margin: 20px 0;
+        }
+        button, a {
+            padding: 10px 15px;
+            margin: 10px 5px 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn-delete:hover {
+            background-color: #da190b;
+        }
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <div class="logo">Administracion - CAFELAZOR</div>
+        <div class="header-links">
+            <a href="{% url 'cafe_list' %}" class="btn-login">Volver</a>
+        </div>
+    </header>
+    
+    <div class="content">
+        <h1>Eliminar Producto</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Advertencia:</strong> Esta acción no se puede deshacer. ¿Está seguro de que desea eliminar este producto?
+        </div>
+
+        <div class="cafe-info">
+            <h2>{{ cafe.name }}</h2>
+            <p><strong>Categoría:</strong> {{ cafe.get_category_display }}</p>
+            <p><strong>Descripción:</strong> {{ cafe.description }}</p>
+            <p><strong>Precio:</strong> ${{ cafe.price }}</p>
+        </div>
+
+        <div class="actions">
+            <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-delete">Eliminar Producto</button>
+            </form>
+            <a href="{% url 'cafe_list' %}" class="btn-cancel">Cancelar</a>
+        </div>
+    </div>
+</body>
+</html>

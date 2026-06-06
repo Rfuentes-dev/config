@@ -21,7 +21,7 @@
             {% if user.is_authenticated and user.is_superuser %}
                 <span>Hola {{ user.username }}</span>
                 {% if user.is_superuser %}
-                    <a class="btn-login" href="/admin/">Admin</a>
+                    <a class="btn-login" href="{% url 'cafe_list' %}">Admin</a>
                 {% endif %}
                 <a class="btn-login" href="{% url 'logout' %}">Logout</a>
             {% else %}
@@ -61,10 +61,14 @@
             {% endif %}
         </tbody>
     </table>
-    <h3>Total: $<span id="total">{{ total }}</span></h3>
-    <form id="confirmForm" action="{% url 'resultado' %}" onsubmit="validateCart(event)">
-        <button type="submit">Confirm</button>
-    </form>
+    <div class="cart-footer">
+        <div class="total-section">
+            <h3>Total: $<span id="total">{{ total }}</span></h3>
+        </div>
+        <form id="confirmForm" action="{% url 'resultado' %}" onsubmit="validateCart(event)">
+            <button type="submit" class="btn-confirm">Confirmar</button>
+        </form>
+    </div>
 
     <script src="{% static 'js/script.js' %}"></script>
 </body>
