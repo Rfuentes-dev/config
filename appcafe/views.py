@@ -109,7 +109,7 @@ def login_view(request):
             login(request, user)
             return redirect('index')
         else:
-            return render(request, 'login.html', {'error': 'Invalid username or password'})
+            return render(request, 'login.html', {'error': 'username o contraseña invalida'})
     return render(request, 'login.html')
 
 def logout_view(request):
@@ -138,7 +138,7 @@ def add_to_cart(request):
         request.session['cart'] = cart_session
         request.session.modified = True
 
-        return JsonResponse({'message': 'Product added to cart'})
+        return JsonResponse({'message': 'Producto agregado al carrito'})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 @csrf_exempt
@@ -158,7 +158,7 @@ def remove_from_cart(request):
             request.session['cart'] = cart_session
             request.session.modified = True
 
-            return JsonResponse({'status': 'success', 'message': 'Product removed from cart'})
+            return JsonResponse({'status': 'success', 'message': 'Producto quitado del carrito'})
         except json.JSONDecodeError as e:
             return JsonResponse({'error': f'Invalid JSON: {str(e)}'}, status=400)
         except (ValueError, TypeError) as e:
