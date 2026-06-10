@@ -86,7 +86,7 @@ function addToCart(id, name, price) {
     })
     .then(data => {
         console.log('Product added successfully:', data);
-        alert('Product added to cart!');
+        alert('Producto Agregado al Carrito');
     })
     .catch(error => {
         console.error('Error:', error);
@@ -122,7 +122,7 @@ function validateCart(event) {
             
     if (isEmpty) {
         event.preventDefault();
-        alert('Your cart is empty. Please add items before confirming your order.');
+        alert('El carrito esta vacio. Agregue una orden para confirmar tu pedido.');
         return false;
     }
     return true;
