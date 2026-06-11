@@ -127,3 +127,31 @@ td, th {
     text-align: center;
 }
 
+.cart-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    width: 100%
+}
+
+.total-section h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.btn-confirm {
+    background-color: #1e3f20;
+    color: white;
+    border: none;
+    padding: 10px 35px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-confirm:hover {
+    background-color: #2d5a30;
+}
+
