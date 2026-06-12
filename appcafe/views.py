@@ -6,6 +6,8 @@ from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout, authenticate, login
+from django.contrib import messages
+
 
 # Create your views here.
 def index(request):
@@ -98,6 +100,27 @@ def cart(request):
     
     return render(request, 'carrito.html', context)
 
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password_conf = request.POST.get('confirm_password')
+
+        if password != password_conf:
+            messages.error(request, 'No coinciden las contraseñas')
+            return redirect('register')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Nombre de Usuario ya existe')
+            return redirect('register')
+
+        new_user = User.objects.create_user(username=username, email=email, password=password)
+
+        login(request, new_user)
+        return redirect('index')
+    return render(request, 'register.html')
+
 @csrf_protect
 def login_view(request):
     if request.method == 'POST':
@@ -170,5 +193,3 @@ def remove_from_cart(request):
 def category(request, category_name):
     cafes = Cafe.objects.filter(category=category_name)
     return render(request, 'category.html', {'cafes': cafes, 'category_name': category_name})
-
-
