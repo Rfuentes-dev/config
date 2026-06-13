@@ -46,7 +46,11 @@
         <div class="grid">
             {% for cafe in cafes %}
                 <div class="card">
-                    <img src="{% static 'img/Cafe.png' %}" style="max-width: 75px; height: auto;" alt="{{ cafe.name }}">
+                    {% if cafe.category == 'hot' %}
+                        <img src="{% static 'img/cafes_calientes.png' %}" style="max-width: 75px; height: auto;" alt="{{ cafe.name }}">
+                    {% elif cafe.category == 'cold' %}
+                        <img src="{% static 'img/cafes_frios.png' %}" style="max-width: 75px; height: auto;" alt="{{ cafe.name }}">
+                    {% endif %}
                     <h3>{{ cafe.name }}</h3>
                     <p>${{ cafe.price }}</p>
                     <button class="btn-primary" data-id="{{ cafe.id }}" data-name="{{ cafe.name }}" data-price="{{ cafe.price }}">Add</button>
