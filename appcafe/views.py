@@ -7,6 +7,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 
 # Create your views here.

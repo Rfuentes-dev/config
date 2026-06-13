@@ -23,6 +23,7 @@
                 {% endif %}
                 <a class="btn-login" href="{% url 'logout' %}">Logout</a>
             {% else %}
+                <a class="btn-register" href="{% url 'register' %}">Registrarse</a>
                 <a class="btn-login" href="{% url 'login' %}">Login</a>
             {% endif %}
         </div>
