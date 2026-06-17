@@ -53,6 +53,10 @@
                             <img src="{% static 'img/cafes_calientes.png' %}" style="max-width: 75px; height: auto;" alt="{{ cafe.name }}">
                         {% elif cafe.category == 'cold' %}
                             <img src="{% static 'img/cafes_frios.png' %}" style="max-width: 75px; height: auto;" alt="{{ cafe.name }}">
+                        {% elif cafe.category == 'desserts' %}
+                            <img src="{% static 'img/postres.png' %}" style="max-width: 75px; height: auto;" alt="{{ cafe.name }}">
+                        {% elif cafe.category == 'sandwiches' %}
+                            <img src="{% static 'img/sandwiches.png' %}" style="max-width: 75px; height: auto;" alt="{{ cafe.name }}">
                         {% endif %}
                         <h3>{{ cafe.name }}</h3>
                         <p>${{ cafe.price }}</p>
