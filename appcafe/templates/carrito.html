@@ -62,7 +62,7 @@
     </table>
     <div class="cart-footer">
         <div class="total-section">
-            <h3>Total: $<span id="total">{{ total }}</span></h3>
+            <h3>Total: $<span id="total">{{ total|floatformat:2 }}</span></h3>
         </div>
         <form id="confirmForm" action="{% url 'resultado' %}" onsubmit="validateCart(event)">
             <button type="submit" class="btn-confirm">Confirmar</button>

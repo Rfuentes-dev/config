@@ -31,10 +31,21 @@ function removeFromCart(id, name, price) {
             console.log('Item removed from cart successfully');
             const row = document.querySelector(`#cart-item-${id}`);
             if (row) {
+                const rows = row.getElementsByTagName('td');
+                if (rows && rows[2]) {
+                    const productPrice = parseFloat(rows[2].textContent.replace('$', '').trim()) || 0;
+                    const totalElem = document.getElementById('total');
+                    if (totalElem) {
+                        const totalActual = parseFloat(totalElem.textContent.replace('$', '').trim()) || 0;
+                        const newTotal = Math.max(0, totalActual - productPrice);
+                        totalElem.textContent = newTotal.toFixed(2);
+                    }
+                }
                 row.remove();
 
                 if (data.cart_count !== undefined) {
-                    document.getElementById('cart-count').textContent = data.cart_count;
+                    const cartCountElem = document.getElementById('cart-count').textContent = data.cart_count;
+                    if (cartCountElem) cartCountElem.textContent = data.cart_count;
                 }
             }
 
