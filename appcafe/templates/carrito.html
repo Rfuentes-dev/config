@@ -16,7 +16,7 @@
             <a href="{% url 'cart' %}">Carrito</a>
         </nav>
         <div>
-            {% if user.is_authenticated and user.is_superuser %}
+            {% if user.is_authenticated %}
                 <span>Hola {{ user.username }}</span>
                 {% if user.is_superuser %}
                     <a class="btn-login" href="{% url 'cafe_list' %}">Admin</a>
@@ -36,9 +36,9 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Action</th>
+                <th>Productos</th>
+                <th>Precio</th>
+                <th>Accion</th>
             </tr>
         </thead>
         <tbody>
