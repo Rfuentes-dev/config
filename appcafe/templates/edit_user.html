@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Editar Usuario</title>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Editar Usuario</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="username" value="{{ usuario.username }}" required>
+            <input type="email" name="email" value="{{ usuario.email }}">
+            <input type="password" name="password" placeholder="Nueva Contraseña">
+            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin-bottom: 20px;">
+                <input type="checkbox" name="is_superuser" id="is_superuser" {% if usuario.is_superuser %}checked{% endif %} style="width: auto; margin: 0; cursor: pointer;">
+                <label for="is_superuser" style="font-size: 15px; color: #333; cursor: pointer; user-select: none;">¿es admin?</label>
+            </div>
+            <button type="submit">Actualizar</button>
+        </form>
+        <p style="margin-top: 15px;"><a href="{% url 'user_list' %}">Volver</a></p>
+    </div>
+</body>
+</html>

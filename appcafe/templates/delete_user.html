@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Usuario</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .admin-header {
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .btn-back {
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            background-color: #2196F3;
+            color: white;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background-color: #0b7dda;
+        }
+        .login-container {
+            width: 350px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .login-container h1 {
+            color: #f44336;
+            font-size: 26px;
+            margin-bottom: 20px;
+            text-align: center;
+            margin-top: 0;
+        }
+        .login-container p {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        .btn-confirm-delete {
+            width: 100%;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-confirm-delete:hover {
+            background-color: #d32f2f;
+        }
+        .cancel-link {
+            display: block;
+            margin-top: 15px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .cancel-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <div class="logo">Administracion - USUARIOS</div>
+        <a href="{% url 'user_list' %}" class="btn-back">Volver</a>
+    </header>
+
+    <div class="login-container">
+        <h1>¿Eliminar Usuario?</h1>
+
+        <p>¿Estas seguro de eliminar <strong>{{ usuario.username }}</strong>?</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn-confirm-delete">Si</button>
+        </form>
+
+        <a href="{% url 'user_list' %}" class="cancel-link">Cancelar</a>
+    </div>
+</body>
+</html>

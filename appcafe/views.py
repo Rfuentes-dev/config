@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Cafe
+from .models import Cafe, Pedido
 from .forms import ProductForm
 from django.views.decorators.csrf import csrf_protect
 from django.http import JsonResponse
@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.db import connection
 
 
 # Create your views here.
@@ -140,14 +141,144 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
-def about(request):
-    return render(request, 'about.html')
-
-def contact(request):
-    return render(request, 'contact.html')
-
 def resultado(request):
-    return render(request, 'resultado.html')
+    cart_session = request.session.get('cart', [])
+
+    if not isinstance(cart_session, list):
+        cart_session = []
+
+    if not cart_session:
+        return redirect('cart')
+
+    total_price = 0
+    gotProducts = []
+
+    for item in cart_session:
+        if isinstance(item, dict):
+            p_id = item.get('product_id')
+            quantity = item.get('quantity', 1)
+
+            if p_id is not None:
+                cafe = Cafe.objects.filter(id=int(p_id)).first()
+                if cafe:
+                    total_price += cafe.price * quantity
+                    gotProducts.append(f"{cafe.name} (x{quantity})")
+
+    pedido = None
+    if gotProducts:
+        textDetails = ", ".join(gotProducts)
+        userActual = request.user if request.user.is_authenticated else None
+
+        pedido = Pedido.objects.create(
+            user = userActual,
+            total = total_price,
+            details = textDetails
+        )
+    request.session['cart'] = []
+    request.session.modified = True
+
+    return render(request, 'resultado.html', {'pedido': pedido})
+
+def historial_pedidos(request):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('index')
+    
+    pedidos_db = Pedido.objects.all().order_by('-date')
+
+    if not pedidos_db.exists():
+        tableName = Pedido._meta.db_table
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM sqlite_sequence WHERE name = %s", [tableName])
+            cursor.execute("DELETE FROM sqlite_sequence WHERE name LIKE '%%pedido%%'")
+
+    
+    return render(request, 'historial.html', {'pedidos': pedidos_db})
+
+def delete_pedido(request, pedido_id):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('index')
+    
+    if request.method == 'POST':
+        pedido = Pedido.objects.get(id=pedido_id)
+        pedido.delete()
+        messages.success(request, f'El pedido #{pedido_id} fue eliminado con exito.', extra_tags='pedido_msg')
+
+    return redirect('historial_pedidos')
+
+def user_list(request):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('index')
+
+    users = User.objects.all().order_by('id')
+    return render(request, 'user_list.html', {'usuarios': users})
+
+def add_user(request):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('index')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        es_admin = request.POST.get('is_superuser') == 'on'
+
+        if User.objects.filter(username=username).exists():
+            message.error(request, 'El nombre de usuario ya existe.')
+            return redirect('add_user')
+        
+        new_user = User.objects.create_user(username=username, email=email, password=password)
+        new_user.is_superuser = es_admin
+        new_user.is_staff = es_admin
+        new_user.save()
+
+        return redirect('user_list')
+
+    return render(request, 'add_user.html')
+
+def edit_user(request, user_id):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('index')
+
+    userEdit = User.objects.get(id=user_id)
+
+    if request.method == 'POST':
+        new_username = request.POST.get('username')
+        new_email = request.POST.get('email')
+        es_admin = request.POST.get('is_superuser') == 'on'
+
+        if User.objects.filter(username=new_username).exclude(id=user_id).exists():
+            messages.error(request, 'nombre de usuario ocupado por otro.')
+            return render(request, 'edit_user.html', {'usuario': userEdit})
+
+        userEdit.username = new_username
+        userEdit.email = new_email
+        userEdit.is_superuser = es_admin
+        userEdit.is_staff = es_admin
+
+        new_password = request.POST.get('password')
+        if new_password and new_password.strip() !="":
+            userEdit.set_password(new_password)
+        
+        userEdit.save()
+        return redirect('user_list')
+    
+    return render(request, 'edit_user.html', {'usuario': userEdit})
+
+def delete_user(request, user_id):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('index')
+    
+    user = User.objects.get(id=user_id)
+
+    if user == request.user:
+        messages.error(request, "No puedes eliminar tu cuenta si eres el admin.")
+        return redirect('user_list')
+    
+    if request.method == 'POST':
+        user.delete()
+        return redirect('user_list')
+    
+    return render(request, 'delete_user.html', {'usuario': user})
 
 @csrf_exempt
 def add_to_cart(request):

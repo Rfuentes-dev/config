@@ -28,7 +28,12 @@
             {% endif %}
         </div>
     </header>
-    <h1>Gracias por su compra.</h1>
+    <h1>Gracias por su compra, {{ user.username|default:"Cliente" }}.</h1>
+    <h2>Pedido #{{ pedido.id }} Confirmado</h2>
+    <div class="message-confirm">
+        <p><strong>Productos:</strong> {{ pedido.details }}</p>
+        <p><strong>Total:</strong>${{ pedido.total|floatformat:2 }}</p>
+    </div>
     <h1>El pedido se enviara en breve</h1>
 </body>
 </html>

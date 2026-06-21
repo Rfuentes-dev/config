@@ -31,6 +31,8 @@
             align-items: center;
         }
         .btn {
+            background-color: #f39c12;
+            color: white;
             padding: 10px 15px;
             text-decoration: none;
             border-radius: 5px;
@@ -44,6 +46,13 @@
         }
         .btn-add:hover {
             background-color: #45a049;
+        }
+        .btn-history {
+            background-color: #673AB7;
+            color: white;
+        }
+        .btn-history:hover {
+            background-color: #512DA8;
         }
         .btn-back {
             background-color: #2196F3;
@@ -93,6 +102,8 @@
         <div class="logo">Administración - CAFELAZOR</div>
         <div class="header-actions">
             <a href="{% url 'add_cafe' %}" class="btn btn-add">+ Agregar Producto</a>
+            <a href="{% url 'historial_pedidos' %}" class="btn btn-history">Historial</a>
+            <a href="{% url 'user_list' %}" class="btn">Usuarios</a>
             <a href="{% url 'index' %}" class="btn btn-back">Ir al sitio</a>
         </div>
     </header>
