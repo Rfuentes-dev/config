@@ -103,6 +103,7 @@
                     <th>Productos</th>
                     <th>Fecha</th>
                     <th>Total</th>
+                    <th>Estado</th>
                     <th>Accion</th>
                 </tr>
             </thead>
@@ -116,16 +117,31 @@
                             <td>{{ p.date|date:"d/m/Y H:i" }}</td>
                             <td><strong>${{ p.total|floatformat:2 }}</strong></td>
                             <td>
-                                <form action="{% url 'delete_pedido' p.id %}" method="POST" onsubmit="return confirm('¿Estas seguro de eliminar el pedido #{{ p.id }}?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn">Eliminar</button>
-                                </form>
+                                {% if p.status == 'shipped' %}
+                                    <span style="background-color: #4CAF50; color: white; padding: 5px 10px; border-radius: 3px; font-size: 12px; font-weight: bold;">Enviado</span>
+                                {% else %}
+                                    <span style="background-color: #9e9e9e; color: white; padding: 5px 10px; border-radius: 3px; font-size: 12px; font-weight: bold;">Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 5px; justify-content: center;">
+                                    <form action="{% url 'status_choice' p.id %}" method="POST" style="margin: 0;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn">
+                                            {% if p.status == 'shipped' %}Deshacer{% else %}Enviar{% endif %}
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'delete_pedido' p.id %}" method="POST" onsubmit="return confirm('¿Estas seguro de eliminar el pedido #{{ p.id }}?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn">Eliminar</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="6">No hay Registro</td>
+                        <td colspan="7">No hay Registro</td>
                     </tr>
                 {% endif %}
             </tbody>

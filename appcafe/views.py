@@ -194,6 +194,22 @@ def historial_pedidos(request):
     
     return render(request, 'historial.html', {'pedidos': pedidos_db})
 
+def status_choice(request, pedido_id):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('index')
+
+    if request.method == 'POST':
+        pedido = Pedido.objects.get(id=pedido_id)
+
+        if pedido.status == 'pending':
+            pedido.status = 'shipped'
+        else:
+            pedido.status = 'pending'
+        pedido.save()
+        messages.success(request, f'El estado fue actualizado', extra_tags='pedido_msg')
+    
+    return redirect('historial_pedidos')
+
 def delete_pedido(request, pedido_id):
     if not request.user.is_authenticated or not request.user.is_superuser:
         return redirect('index')

@@ -25,5 +25,12 @@ class Pedido(models.Model):
     total = models.DecimalField(max_digits=7, decimal_places=2)
     details = models.TextField()
 
+    STATUS_CHOICES = [
+        ('pending', 'Pendiente'),
+        ('shipped', 'Enviado')
+    ]
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+
     def __str__(self):
         return f"Pedido #{self.id} - Total: ${self.total}"
