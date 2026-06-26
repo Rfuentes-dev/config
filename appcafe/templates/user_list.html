@@ -138,7 +138,7 @@
                 {% if usuarios %}
                     {% for u in usuarios %}
                         <tr>
-                            <td><strong>#{{ u.id }}</strong></td>
+                            <td><strong>#{{ forloop.counter }}</strong></td>
                             <td>{{ u.username }}</td>
                             <td>{{ u.email|default:"Sin correo" }}</td>
                             <td>
